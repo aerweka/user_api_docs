@@ -1,0 +1,415 @@
+export const description =
+  'On this page, we’ll dive into the different user endpoints you can use to manage users programmatically.'
+
+# Users
+
+Users are where communities live in Protocol — they are a collection of contacts you're talking to all at once. On this page, we'll dive into the different user endpoints you can use to manage users programmatically. We'll look at how to query, create, update, and delete users. {{ className: 'lead' }}
+
+## The user model
+
+The user model contains all the information about your users, including what contacts are in the user and the user's name, description, and avatar.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="ObjectId">
+    Unique identifier for the user.
+  </Property>
+  <Property name="username" type="String">
+    Unique username for login.
+  </Property>
+  <Property name="email" type="String">
+    Email should be verified and used for sending notification.
+  </Property>
+  <Property name="name" type="String">
+    User real full name.
+  </Property>
+  <Property name="name_alias" type="String">
+    User name that company choose, used for approval name, etc...
+  </Property>
+  <Property name="role_id" type="ObjectId">
+    User has role, list of permissions that they had.
+  </Property>
+  <Property name="branchDefault_id" type="ObjectId">
+    For determine which branch created the form.
+  </Property>
+  <Property name="branchAccess_id" type="ObjectId">
+    For separate data from other user from other branch.
+  </Property>
+  <Property name="isArchived" type="Boolean">
+    To flag that the data have been archived if true.
+  </Property>
+  <Property name="createdBy_id" type="ObjectId">
+    For tracking who create the data.
+  </Property>
+  <Property name="updatedBy_id" type="ObjectId">
+   For tracking who update the data.
+  </Property>
+  <Property name="createdAt" type="timestamp">
+    Timestamp of when the user was created.
+  </Property>
+  <Property name="updatedAt" type="timestamp">
+    Timestamp of when the user was updated.
+  </Property>
+  <Property name="isActive" type="Boolean">
+    Check if user fully activated, if not user cannot log in.
+  </Property>
+  <Property name="warehouseDefault_id" type="ObjectId">
+    For input transaction related to stock.
+  </Property>
+  <Property name="warehouseAccess_id" type="ObjectId">
+    For input transaction related to stock.
+  </Property>
+</Properties>
+
+---
+
+## List all users {{ tag: 'GET', label: '/v1/users' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to retrieve a paginated list of all your users. By default, a maximum of ten users are shown per page.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="size" type="integer">
+        Limit the number of users returned.
+      </Property>
+      <Property name="page" type="integer">
+        Determine what page of user pagination requested.
+      </Property>
+      <Property name="archived" type="boolean">
+        Only show users that are archived when set to `true`.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/users">
+
+    ```bash {{ title: 'cURL' }}
+    curl -G https://api.protocol.chat/v1/users \
+      -H "Authorization: Bearer {token}" \
+      -d limit=10
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "code": 200,
+      "message": "All users retrieved",
+      "data": [
+        {
+          "id": "63ea36cc3f2acd4d518716a4",
+          "username": "johndoe",
+          "email": "johndoe@gmail.com",
+          "name": "John Doe",
+          "name_alias": "John Doe",
+          "role_id": "63ea37217bf20957ee2b41ab",
+          "branchDefault_id": "63ea3753b3e2d6bc8dd79805",
+          "branchAccess_id": [
+            "63ea3753b3e2d6bc8dd79805",
+            "63ea3774191eec53b06345a0",
+            // ...
+            ],
+          "isArchived": false,
+          "createdBy_id": "63ea37c28f2073b59d6eb9a6",
+          "updatedBy_id": "63ea37c28f2073b59d6eb9a6",
+          "createdAt": 692233200,
+          "updatedAt": null,
+          "isActive": true,
+          "warehouseDefault_id": "63ea382c0572831b79edb7f8",
+          "warehouseAccess_id": [
+            "63ea382c0572831b79edb7f8",
+            "63ea383f05ef3f6d27e343e1",
+            // ...
+          ]
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create a user {{ tag: 'POST', label: '/v1/users' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to create a new user conversation between you and a user of your Protocol contacts.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="username" type="String">
+        The username for the user.
+      </Property>
+      <Property name="email" type="String">
+        The email for the user.
+      </Property>
+      <Property name="name" type="String">
+        The name for the user.
+      </Property>
+      <Property name="name_alias" type="String">
+        The name alias for the user.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="role_id" type="ObjectId">
+        The role for the user.
+      </Property>
+      <Property name="branchDefault_id" type="ObjectId">
+        The branch for the user.
+      </Property>
+      <Property name="branchAccess_id" type="ObjectId">
+        The description for the user.
+      </Property>
+      <Property name="isArchived" type="Boolean">
+        To flag that the data have been archived if true.
+      </Property>
+      <Property name="isActive" type="Boolean">
+        Check if user fully activated, if not user cannot log in.
+      </Property>
+      <Property name="warehouseDefault_id" type="ObjectId">
+        For input transaction related to stock.
+      </Property>
+      <Property name="warehouseAccess_id" type="ObjectId">
+        For input transaction related to stock.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/users">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protocol.chat/v1/users \
+      -H "Authorization: Bearer {token}" \
+      -d '{"username":"johndoenew","email":"new.johndoe@gmail.com","name":"John Doe New","name_alias":"johndoenew"}'
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "code": 201,
+      "message": "User successfully created",
+      "data": {
+        "id": "63ea36cc3f2acd4d518716a4",
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "name": "John Doe",
+        "name_alias": "John Doe",
+        "role_id": "63ea37217bf20957ee2b41ab",
+        "branchDefault_id": "63ea3753b3e2d6bc8dd79805",
+        "branchAccess_id": [
+          "63ea3753b3e2d6bc8dd79805",
+          "63ea3774191eec53b06345a0",
+          // ...
+          ],
+        "isArchived": false,
+        "createdBy_id": "63ea37c28f2073b59d6eb9a6",
+        "updatedBy_id": "63ea37c28f2073b59d6eb9a6",
+        "createdAt": 692233200,
+        "updatedAt": null,
+        "isActive": true,
+        "warehouseDefault_id": "63ea382c0572831b79edb7f8",
+        "warehouseAccess_id": [
+          "63ea382c0572831b79edb7f8",
+          "63ea383f05ef3f6d27e343e1",
+          // ...
+        ]
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Retrieve a user {{ tag: 'GET', label: '/v1/users/:id' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to retrieve a user by providing the user id. Refer to [the list](#the-user-model) at the top of this page to see which properties are included with user objects.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/users/63ea36cc3f2acd4d518716a4">
+
+    ```bash {{ title: 'cURL' }}
+    curl https://api.protocol.chat/v1/users/63ea36cc3f2acd4d518716a4 \
+      -H "Authorization: Bearer {token}"
+    ```
+    
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "code": 200,
+      "message": "User successfully retrieved",
+      "data": {
+        "id": "63ea36cc3f2acd4d518716a4",
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "name": "John Doe",
+        "name_alias": "John Doe",
+        "role_id": "63ea37217bf20957ee2b41ab",
+        "branchDefault_id": "63ea3753b3e2d6bc8dd79805",
+        "branchAccess_id": [
+          "63ea3753b3e2d6bc8dd79805",
+          "63ea3774191eec53b06345a0",
+          // ...
+          ],
+        "isArchived": false,
+        "createdBy_id": "63ea37c28f2073b59d6eb9a6",
+        "updatedBy_id": "63ea37c28f2073b59d6eb9a6",
+        "createdAt": 692233200,
+        "updatedAt": null,
+        "isActive": true,
+        "warehouseDefault_id": "63ea382c0572831b79edb7f8",
+        "warehouseAccess_id": [
+          "63ea382c0572831b79edb7f8",
+          "63ea383f05ef3f6d27e343e1",
+          // ...
+        ]
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Update a user {{ tag: 'PUT', label: '/v1/users/:id' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to perform an update on a user. Examples of updates are changing the name, description, and avatar or adding and removing contacts from the user.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="username" type="String">
+        The username for the user.
+      </Property>
+      <Property name="email" type="String">
+        The email for the user.
+      </Property>
+      <Property name="name" type="String">
+        The name for the user.
+      </Property>
+      <Property name="name_alias" type="String">
+        The name alias for the user.
+      </Property>
+      <Property name="role_id" type="ObjectId">
+        The role for the user.
+      </Property>
+      <Property name="branchDefault_id" type="ObjectId">
+        The branch for the user.
+      </Property>
+      <Property name="branchAccess_id" type="ObjectId">
+        The description for the user.
+      </Property>
+      <Property name="isArchived" type="Boolean">
+        To flag that the data have been archived if true.
+      </Property>
+      <Property name="isActive" type="Boolean">
+        Check if user fully activated, if not user cannot log in.
+      </Property>
+      <Property name="warehouseDefault_id" type="ObjectId">
+        For input transaction related to stock.
+      </Property>
+      <Property name="warehouseAccess_id" type="ObjectId">
+        For input transaction related to stock.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PUT" label="/v1/users/L7cGNIBKZiNJ6wqF">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X PUT https://api.protocol.chat/v1/users/L7cGNIBKZiNJ6wqF \
+      -H "Authorization: Bearer {token}" \
+      -d name="John Doe Updated"
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "code": 200,
+      "message": "User successfully updated",
+      "data": {
+        "id": "63ea36cc3f2acd4d518716a4",
+        "username": "johndoe",
+        "email": "johndoe@gmail.com",
+        "name": "John Doe",
+        "name_alias": "John Doe",
+        "role_id": "63ea37217bf20957ee2b41ab",
+        "branchDefault_id": "63ea3753b3e2d6bc8dd79805",
+        "branchAccess_id": [
+          "63ea3753b3e2d6bc8dd79805",
+          "63ea3774191eec53b06345a0",
+          // ...
+          ],
+        "isArchived": false,
+        "createdBy_id": "63ea37c28f2073b59d6eb9a6",
+        "updatedBy_id": "63ea37c28f2073b59d6eb9a6",
+        "createdAt": 692233200,
+        "updatedAt": null,
+        "isActive": true,
+        "warehouseDefault_id": "63ea382c0572831b79edb7f8",
+        "warehouseAccess_id": [
+          "63ea382c0572831b79edb7f8",
+          "63ea383f05ef3f6d27e343e1",
+          // ...
+        ]
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete a user {{ tag: 'DELETE', label: '/v1/users/:id' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to delete users. Note: This will permanently delete the user, including the messages — archive it instead if you want to be able to restore it later.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/users/63ea36cc3f2acd4d518716a4">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X DELETE https://api.protocol.chat/v1/users/63ea36cc3f2acd4d518716a4 \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
