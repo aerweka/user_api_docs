@@ -160,19 +160,19 @@ The user model contains all the information about your users, including what con
       <Property name="name_alias" type="String">
         The name alias for the user.
       </Property>
+      <Property name="role_id" type="ObjectId">
+        The role for the user.
+      </Property>
+      <Property name="branchAccess_id" type="ObjectId">
+        The description for the user.
+      </Property>
     </Properties>
 
     ### Optional attributes
 
     <Properties>
-      <Property name="role_id" type="ObjectId">
-        The role for the user.
-      </Property>
       <Property name="branchDefault_id" type="ObjectId">
         The branch for the user.
-      </Property>
-      <Property name="branchAccess_id" type="ObjectId">
-        The description for the user.
       </Property>
       <Property name="isArchived" type="Boolean">
         To flag that the data have been archived if true.
